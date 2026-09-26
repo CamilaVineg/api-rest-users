@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  Logger,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
 import { CreatePaymentSessionDto } from './dto/create-payment-session.dto.js';
@@ -23,9 +19,7 @@ export class PaymentsService {
   ): Promise<Stripe.Checkout.Session> {
     return this.stripe.checkout.sessions.create({
       mode: 'payment',
-      success_url: this.configService.getOrThrow<string>(
-        'STRIPE_SUCCESS_URL',
-      ),
+      success_url: this.configService.getOrThrow<string>('STRIPE_SUCCESS_URL'),
       cancel_url: this.configService.getOrThrow<string>('STRIPE_CANCEL_URL'),
       payment_intent_data: {
         metadata: {
@@ -64,7 +58,7 @@ export class PaymentsService {
     switch (event.type) {
       case 'charge.succeeded': {
         const orderId = (event.data.object as Stripe.Charge).metadata.orderId;
-        this.logger.log(`Payment succeeded for order ${orderId}`);
+        this.logger.log(`Payment succeeded for order ${orderId ?? 'unknown'}`);
         break;
       }
       default:

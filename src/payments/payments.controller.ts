@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   Headers,
+  HttpCode,
   Post,
   Req,
 } from '@nestjs/common';
@@ -26,6 +27,7 @@ export class PaymentsController {
   }
 
   @Post('webhook')
+  @HttpCode(200)
   handleWebhook(
     @Req() req: RequestWithRawBody,
     @Headers('stripe-signature') signature: string,
